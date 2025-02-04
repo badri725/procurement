@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Procurement System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .stat {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+        }
+           .stat-box a {
+            color: white;
+            text-decoration: none;
+        }
+        /* Style first four rows and two columns links */
+        .stat-box:nth-child(-n+8) a {
+            color: red;
+            font-size: 20px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+        }
+        .stats .stat-box {
+            width: 25%;
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Dashboard</h2>
+        <div class="stat">
+            <div class="stat-box"><a href="orders.html">Orders</a></div>
+            <div class="stat-box"><a href="create-order.html">Create Order</a></div>
+            <div class="stat-box"><a href="approvals.html">Approvals</a></div>
+            <div class="stat-box"><a href="contract-management.html">Contract_MNT</a></div>
+            <div class="stat-box"><a href="inventory.html">Inventory</a></div>
+            <div class="stat-box"><a href="issue-resolution.html">Issue-Resol</a></div>
+            <div class="stat-box"><a href="supplier-onboarding.html">Suppliers</a></div>
+            <div class="stat-box"><a href="index.html">Logout</a></div>
+        </div>
+        <div class="stats">
+            <div class="stat-box">
+                <h3>Total Orders</h3>
+                <p id="totalOrders">Loading...</p>
+            </div>
+            <div class="stat-box">
+                <h3>Pending Approvals</h3>
+                <p id="pendingApprovals">Loading...</p>
+            </div>
+            <div class="stat-box">
+                <h3>Completed Orders</h3>
+                <p id="completedOrders">Loading...</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("http://127.0.0.1:5001/stats")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Server responded with an error");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("totalOrders").textContent = data.total_orders ?? "0";
+                    document.getElementById("pendingApprovals").textContent = data.pending_approvals ?? "0";
+                    document.getElementById("completedOrders").textContent = data.completed_orders ?? "0";
+                })
+                .catch(error => {
+                    console.error("Error fetching stats:", error);
+                    document.getElementById("totalOrders").textContent = "0";
+                    document.getElementById("pendingApprovals").textContent = "0";
+                    document.getElementById("completedOrders").textContent = "0";
+                });
+        });
+    </script>
+</body>
+</html>
